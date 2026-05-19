@@ -1,12 +1,14 @@
 <script type="module">
 
 async function startCheckout(plan, btn) {
+  let originalText = "";
 
   try {
-
-    btn.disabled = true;
-    const originalText = btn.innerText;
-    btn.innerText = "Redirecting...";
+    if (btn) {
+      btn.disabled = true;
+      originalText = btn.innerText;
+      btn.innerText = "Creating secure session...";
+    }
 
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -16,22 +18,30 @@ async function startCheckout(plan, btn) {
       body: JSON.stringify({ plan })
     });
 
-    const data = await res.json();
-
-    if (!data.url) {
-      throw new Error("Missing checkout URL");
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
     }
 
-    window.location.href = data.url;
+    const data = await res.json();
+
+    if (!data?.url) {
+      throw new Error("Invalid checkout session response");
+    }
+
+    // small UX delay feels more "enterprise SaaS"
+    setTimeout(() => {
+      window.location.assign(data.url);
+    }, 400);
 
   } catch (err) {
+    console.error("Checkout error:", err);
 
-    console.error(err);
+    alert("Unable to start checkout. Please try again or contact support.");
 
-    alert("Checkout failed. Try again.");
-
-    btn.disabled = false;
-    btn.innerText = "Start Getting Leads";
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = originalText || "Start Plan";
+    }
   }
 }
 
