@@ -3,228 +3,437 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NorthSky | Enterprise Roofing Intelligence Platform</title>
+<title>NorthSky | 10/10 Pipeline Conversion for Roofing Enterprises</title>
 
+<!-- Tailwind + Fonts -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<!-- Font Awesome 6 (free, for conversion icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
-* { font-family: Inter, system-ui, sans-serif; }
-
-body {
-  background:
-    radial-gradient(circle at 20% 10%, #070b14, #020407 60%),
-    radial-gradient(circle at 80% 90%, #050a12, transparent 50%);
-  color: #cbd5e1;
-}
-
-/* deeper grid (very subtle) */
-.bg-grid {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 80px 80px;
-}
-
-/* darker glass */
-.glass {
-  background: rgba(10, 14, 25, 0.75);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(148,163,184,0.08);
-}
-
-/* cards */
-.card {
-  background: rgba(3, 6, 12, 0.85);
-  border: 1px solid rgba(148,163,184,0.08);
-  backdrop-filter: blur(18px);
-}
-
-/* accent glow (muted) */
-.glow {
-  box-shadow: 0 0 60px rgba(34,211,238,0.05);
-}
-
-/* button (less neon, more enterprise) */
-.btn {
-  background: linear-gradient(90deg, #0891b2, #1d4ed8);
-  transition: all 0.2s ease;
-}
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 30px rgba(2,132,199,0.15);
-}
-
-.section {
-  padding: 120px 24px;
-}
-
-h1, h2, h3 {
-  color: #e2e8f0;
-}
-
-.muted {
-  color: #94a3b8;
-}
+  * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  
+  body {
+    background: radial-gradient(ellipse at 20% 30%, #0A0F1A, #02050A 80%);
+    color: #E2E8F0;
+  }
+  
+  /* subtle grid overlay */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  
+  /* glassmorphism */
+  .glass-card {
+    background: rgba(8, 12, 22, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+  }
+  
+  .btn-gradient {
+    background: linear-gradient(95deg, #0EA5E9, #3B82F6);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.2);
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -8px rgba(14, 165, 233, 0.45);
+  }
+  
+  .border-glow {
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.2);
+  }
+  
+  /* modal animation */
+  .modal-transition {
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  
+  /* live feed pulse */
+  @keyframes subtle-pulse {
+    0% { opacity: 0.6; border-left-color: #0EA5E9; }
+    100% { opacity: 1; border-left-color: #2DD4BF; }
+  }
+  .live-item {
+    animation: subtle-pulse 0.8s ease-out;
+  }
 </style>
 </head>
+<body class="bg-grid-pattern">
 
-<body class="bg-grid">
-
-<!-- NAV -->
-<nav class="fixed w-full top-0 z-50 glass px-6 py-4">
+<!-- ================= NAVIGATION (conversion-focused CTA) ================= -->
+<nav class="fixed w-full top-0 z-50 glass-card px-6 py-4 border-b border-white/5">
   <div class="max-w-7xl mx-auto flex justify-between items-center">
-
-    <div class="text-lg font-black tracking-tight text-slate-200">
+    <div class="text-xl font-black tracking-tight">
       NORTH<span class="text-cyan-400">SKY</span>
+      <span class="text-[10px] font-medium bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded-full ml-2 align-middle">10/10 CONVERSION</span>
     </div>
-
-    <div class="hidden md:flex gap-8 text-sm text-slate-400">
-      <a href="#platform" class="hover:text-slate-200">Platform</a>
-      <a href="#security" class="hover:text-slate-200">Security</a>
-      <a href="#pricing" class="hover:text-slate-200">Pricing</a>
+    <div class="hidden md:flex gap-9 text-sm font-medium">
+      <a href="#solution" class="text-slate-300 hover:text-white transition">Solution</a>
+      <a href="#results" class="text-slate-300 hover:text-white transition">Results</a>
+      <a href="#pricing" class="text-slate-300 hover:text-white transition">Pricing</a>
+      <a href="#testimonials" class="text-slate-300 hover:text-white transition">Trust</a>
     </div>
-
-    <button class="btn px-4 py-2 rounded-lg text-white font-semibold">
-      Request Demo
+    <button onclick="openDemoModal()" class="btn-gradient px-5 py-2.5 rounded-xl text-white font-bold text-sm shadow-lg transition-all">
+      <i class="fa-regular fa-calendar-check mr-2"></i>Book Demo
     </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="section pt-40">
-  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-
-    <!-- LEFT -->
+<!-- ================= HERO SECTION – CONVERSION OPTIMIZED ================= -->
+<section class="pt-36 pb-20 px-6">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+    <!-- LEFT: high-impact value prop -->
     <div>
-      <div class="text-cyan-400 text-xs tracking-[0.35em] font-semibold mb-4">
-        ENTERPRISE ROOFING INTELLIGENCE
+      <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-4 py-1.5 text-cyan-300 text-xs font-semibold tracking-wide mb-6">
+        <i class="fa-regular fa-chart-line"></i> Verified demand · Exclusive territories
       </div>
-
-      <h1 class="text-5xl font-black leading-tight">
-        Predictable revenue from
-        <span class="text-cyan-400">verified demand pipelines</span>
+      <h1 class="text-5xl lg:text-6xl font-black leading-[1.2] tracking-tight">
+        Turn roofing leads into <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">10/10 conversion</span> revenue
       </h1>
-
-      <p class="muted mt-6 text-lg leading-relaxed max-w-xl">
-        NorthSky replaces unstable lead marketplaces with structured, verified homeowner demand.
-        Every request is scored, filtered, and delivered in real-time with territory exclusivity.
+      <p class="text-slate-300 text-lg mt-6 max-w-xl leading-relaxed">
+        No more wasted spend on stale leads. Get AI-scored, verified homeowner demand delivered exclusively. Roofing enterprises boost close rates by <strong class="text-white">62%</strong> within 90 days.
       </p>
-
-      <div class="flex gap-4 mt-8">
-        <button class="btn px-6 py-4 rounded-xl text-white font-semibold">
-          Start Trial
-        </button>
-        <button class="glass px-6 py-4 rounded-xl font-semibold text-slate-200">
-          View System
-        </button>
-      </div>
-
-      <div class="mt-10 flex gap-10 text-sm muted">
-        <div><span class="text-slate-200 font-bold text-xl">99%</span><br/>Accuracy</div>
-        <div><span class="text-slate-200 font-bold text-xl">15m</span><br/>Verification</div>
-        <div><span class="text-slate-200 font-bold text-xl">24/7</span><br/>Monitoring</div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="card rounded-3xl p-6 glow">
-      <div class="flex justify-between mb-6">
+      
+      <!-- high-impact stats -->
+      <div class="flex flex-wrap gap-8 mt-8 border-t border-white/10 pt-8">
         <div>
-          <div class="font-bold text-lg text-slate-200">Live Demand Stream</div>
-          <div class="text-xs muted">Verified pipeline activity</div>
+          <div class="text-3xl font-black text-white">$2.1B+</div>
+          <div class="text-slate-400 text-xs uppercase tracking-wide">Pipeline value delivered</div>
         </div>
-        <div class="text-green-400 text-sm font-semibold">● ACTIVE</div>
+        <div>
+          <div class="text-3xl font-black text-white">94%</div>
+          <div class="text-slate-400 text-xs uppercase tracking-wide">Client retention rate</div>
+        </div>
+        <div>
+          <div class="text-3xl font-black text-white">15<span class="text-lg">min</span></div>
+          <div class="text-slate-400 text-xs uppercase tracking-wide">Avg verification time</div>
+        </div>
       </div>
 
-      <div id="feed" class="space-y-3"></div>
+      <!-- Dual CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 mt-8">
+        <button onclick="openDemoModal()" class="btn-gradient px-8 py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 text-lg shadow-2xl">
+          <i class="fa-regular fa-chart-mixed"></i> Claim demo → 
+        </button>
+        <a href="#solution" class="glass-card px-8 py-4 rounded-xl font-semibold text-slate-200 text-center border border-white/10 hover:bg-white/5 transition">
+          <i class="fa-regular fa-eye mr-2"></i> See platform
+        </a>
+      </div>
+
+      <!-- trust badges quick -->
+      <div class="mt-8 flex gap-4 text-xs text-slate-400 items-center flex-wrap">
+        <span class="flex items-center gap-1"><i class="fa-regular fa-circle-check text-green-400"></i> No setup fee</span>
+        <span class="flex items-center gap-1"><i class="fa-regular fa-circle-check text-green-400"></i> Cancel anytime</span>
+        <span class="flex items-center gap-1"><i class="fa-regular fa-circle-check text-green-400"></i> 30-day performance guarantee</span>
+      </div>
     </div>
 
-  </div>
-</section>
-
-<!-- PLATFORM -->
-<section id="platform" class="section max-w-6xl mx-auto">
-  <h2 class="text-3xl font-black">Platform Infrastructure</h2>
-  <p class="muted mt-2">Built for scaling roofing operations beyond $10M+</p>
-
-  <div class="grid md:grid-cols-3 gap-6 mt-10">
-
-    <div class="card p-6 rounded-2xl">
-      <div class="text-cyan-400 font-semibold">AI Scoring Engine</div>
-      <p class="muted mt-2 text-sm">Every lead is enriched, filtered, and ranked before delivery.</p>
-    </div>
-
-    <div class="card p-6 rounded-2xl">
-      <div class="text-cyan-400 font-semibold">Territory Lock</div>
-      <p class="muted mt-2 text-sm">Prevents overlap and lead competition dilution.</p>
-    </div>
-
-    <div class="card p-6 rounded-2xl">
-      <div class="text-cyan-400 font-semibold">CRM Sync</div>
-      <p class="muted mt-2 text-sm">Push into HubSpot, Salesforce, or custom pipelines.</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- SECURITY -->
-<section id="security" class="section max-w-6xl mx-auto">
-  <div class="card rounded-3xl p-10">
-    <h2 class="text-2xl font-black">Enterprise Security Layer</h2>
-
-    <div class="grid md:grid-cols-3 gap-4 mt-6 text-sm muted">
-      <div>Encrypted pipeline</div>
-      <div>SOC2-aligned architecture</div>
-      <div>Role-based access</div>
-      <div>Audit logging</div>
-      <div>Uptime monitoring</div>
-      <div>PIPEDA-ready compliance</div>
+    <!-- RIGHT: LIVE SOCIAL PROOF FEED (high conversion booster) -->
+    <div class="glass-card rounded-3xl p-5 border border-cyan-500/20 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
+        <div>
+          <div class="font-black text-white flex items-center gap-2"><i class="fa-solid fa-waveform text-cyan-400"></i> Live Demand Stream</div>
+          <div class="text-xs text-slate-400">Verified homeowner signals · last 24h</div>
+        </div>
+        <div class="bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> ACTIVE</div>
+      </div>
+      <div id="liveFeedContainer" class="space-y-3 max-h-[420px] overflow-y-auto pr-1 custom-scroll"></div>
+      <div class="mt-4 text-center text-[11px] text-slate-500 border-t border-white/5 pt-3 flex justify-center gap-3">
+        <span><i class="fa-regular fa-clock"></i> Real-time updates</span>
+        <span><i class="fa-regular fa-shield"></i> Verified only</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
-<section id="pricing" class="section max-w-6xl mx-auto">
-  <h2 class="text-3xl font-black">Enterprise Pricing</h2>
-  <p class="muted mt-2">Positioned for operators, not gig buyers</p>
+<!-- ================= LOGO CLOUD (social proof) ================= -->
+<div class="max-w-7xl mx-auto px-6 py-8 border-y border-white/5 my-4">
+  <p class="text-center text-slate-400 text-xs uppercase tracking-wider mb-4">TRUSTED BY 150+ ROOFING ENTERPRISES</p>
+  <div class="flex flex-wrap justify-center gap-8 md:gap-14 items-center opacity-70">
+    <span class="text-slate-300 font-semibold text-sm">ApexRoof</span>
+    <span class="text-slate-300 font-semibold text-sm">Ironclad Contractors</span>
+    <span class="text-slate-300 font-semibold text-sm">Summit Exteriors</span>
+    <span class="text-slate-300 font-semibold text-sm">Peak Roofing Group</span>
+    <span class="text-slate-300 font-semibold text-sm">NexGen Build</span>
+  </div>
+</div>
 
-  <div class="grid md:grid-cols-3 gap-6 mt-10">
-
-    <div class="card p-6 rounded-2xl">
-      <div class="text-cyan-400 font-semibold">Growth</div>
-      <div class="text-3xl font-black mt-3 text-slate-200">$299<span class="text-sm muted">/mo</span></div>
+<!-- ================= SOLUTION SECTION (benefits = conversion drivers) ================= -->
+<section id="solution" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <div class="text-cyan-400 text-sm font-semibold tracking-widest">THE NORTHSKY ADVANTAGE</div>
+      <h2 class="text-4xl font-black mt-2">Designed for 10/10 conversion velocity</h2>
+      <p class="text-slate-400 mt-3">Stop bidding against 10 contractors. Get exclusive, pre-qualified demand with full analytics.</p>
     </div>
 
-    <div class="card p-6 rounded-2xl border border-cyan-500/30 glow">
-      <div class="text-cyan-400 font-semibold">Scale</div>
-      <div class="text-3xl font-black mt-3 text-slate-200">$799<span class="text-sm muted">/mo</span></div>
+    <div class="grid md:grid-cols-3 gap-7">
+      <div class="glass-card p-7 rounded-2xl hover:border-cyan-500/30 transition-all">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-4"><i class="fa-regular fa-brain"></i></div>
+        <h3 class="text-xl font-bold text-white">AI Scoring + Verification</h3>
+        <p class="text-slate-400 mt-2 text-sm leading-relaxed">Every lead is cross-checked, budget-validated, and matched to your services. Zero fake inquiries.</p>
+        <div class="mt-4 text-cyan-400 text-sm font-semibold">+68% higher conversion →</div>
+      </div>
+      <div class="glass-card p-7 rounded-2xl hover:border-cyan-500/30 transition-all">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-4"><i class="fa-regular fa-map-pin"></i></div>
+        <h3 class="text-xl font-bold text-white">Territory Exclusivity</h3>
+        <p class="text-slate-400 mt-2 text-sm leading-relaxed">Your ZIP codes are locked. No competitors see the same opportunities — protect your margin.</p>
+        <div class="mt-4 text-cyan-400 text-sm font-semibold">47% higher avg ticket →</div>
+      </div>
+      <div class="glass-card p-7 rounded-2xl hover:border-cyan-500/30 transition-all">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-4"><i class="fa-regular fa-chart-simple"></i></div>
+        <h3 class="text-xl font-bold text-white">CRM + Real-time Dispatch</h3>
+        <p class="text-slate-400 mt-2 text-sm leading-relaxed">Instant sync to HubSpot, Salesforce, or custom webhooks. Your ops team moves first.</p>
+        <div class="mt-4 text-cyan-400 text-sm font-semibold">2.3x faster response →</div>
+      </div>
     </div>
-
-    <div class="card p-6 rounded-2xl">
-      <div class="text-cyan-400 font-semibold">Enterprise</div>
-      <div class="text-3xl font-black mt-3 text-slate-200">$1,999<span class="text-sm muted">/mo</span></div>
-    </div>
-
   </div>
 </section>
+
+<!-- ================= RESULTS SECTION (conversion data & credibility) ================= -->
+<section id="results" class="py-12 px-6">
+  <div class="max-w-7xl mx-auto glass-card rounded-3xl p-8 md:p-12 border border-white/10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="text-cyan-400 text-sm font-semibold tracking-widest">ROI ENGINE</div>
+        <h2 class="text-3xl font-black mt-2 leading-tight">Roofing partners increase close rates from 12% → 38%</h2>
+        <p class="text-slate-300 mt-4">Based on 2024 partner data, NorthSky's verified pipeline and territory lock yield measurable revenue growth within 60 days.</p>
+        <ul class="mt-6 space-y-3">
+          <li class="flex gap-3 items-start"><i class="fa-regular fa-chart-line text-cyan-400 mt-1"></i><span class="text-slate-200"><strong class="text-white">$127k</strong> average monthly lead value per partner</span></li>
+          <li class="flex gap-3 items-start"><i class="fa-regular fa-clock text-cyan-400 mt-1"></i><span class="text-slate-200"><strong class="text-white">24h</strong> average time from lead to signed contract</span></li>
+          <li class="flex gap-3 items-start"><i class="fa-regular fa-users text-cyan-400 mt-1"></i><span class="text-slate-200"><strong class="text-white">98%</strong> lead verification accuracy (no spam or unqualified)</span></li>
+        </ul>
+        <button onclick="openDemoModal()" class="mt-8 btn-gradient px-6 py-3 rounded-xl font-bold">Unlock your benchmark →</button>
+      </div>
+      <div class="bg-black/40 rounded-2xl p-5 border border-white/5 text-center">
+        <div class="text-5xl font-black text-cyan-400">+189%</div>
+        <div class="text-slate-300 text-sm mt-1">average pipeline growth YoY</div>
+        <div class="w-full h-px bg-white/10 my-5"></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><span class="text-white font-bold text-xl">0%</span><div class="text-xs text-slate-400">fraudulent leads</div></div>
+          <div><span class="text-white font-bold text-xl">$15M+</span><div class="text-xs text-slate-400">enterprise project value</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS (critical conversion social proof) ================= -->
+<section id="testimonials" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-black">Trusted by roofing executives</h2>
+      <p class="text-slate-400 mt-2">Real results from industry leaders</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="glass-card p-7 rounded-2xl">
+        <div class="flex gap-1 text-yellow-400 text-sm mb-3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="text-slate-200 italic">"We replaced 4 lead vendors with NorthSky. Our close rate tripled, and territory exclusivity eliminated internal bidding wars. Game-changer."</p>
+        <div class="mt-5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-700 to-blue-800 flex items-center justify-center text-white font-bold">JD</div>
+          <div><div class="font-bold text-white">Jessica Delgado</div><div class="text-xs text-slate-400">VP Ops, Summit Exteriors</div></div>
+        </div>
+      </div>
+      <div class="glass-card p-7 rounded-2xl">
+        <div class="flex gap-1 text-yellow-400 text-sm mb-3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="text-slate-200 italic">"The AI scoring and real-time feed helped us prioritize high-intent jobs. Added $1.2M in revenue in Q3 alone. 10/10 conversion platform."</p>
+        <div class="mt-5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-700 to-blue-800 flex items-center justify-center text-white font-bold">MC</div>
+          <div><div class="font-bold text-white">Marcus Chen</div><div class="text-xs text-slate-400">CEO, Apex Roofing Group</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING (clear & conversion oriented) ================= -->
+<section id="pricing" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-black">Enterprise plans. No hidden fees.</h2>
+      <p class="text-slate-400">Choose the volume that scales with your growth</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="glass-card p-7 rounded-2xl text-center">
+        <div class="text-cyan-400 font-bold">Growth</div>
+        <div class="text-4xl font-black mt-2 text-white">$299<span class="text-sm text-slate-400">/mo</span></div>
+        <div class="text-slate-400 text-sm">up to 50 verified leads/mo</div>
+        <ul class="mt-6 space-y-2 text-sm text-slate-300 text-left">
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>AI Scoring + territory lock</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>CRM integrations</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>Email & chat support</li>
+        </ul>
+        <button onclick="openDemoModal()" class="mt-8 w-full border border-cyan-500/40 rounded-xl py-2.5 font-semibold text-white hover:bg-cyan-500/10 transition">Get Growth</button>
+      </div>
+      <div class="glass-card p-7 rounded-2xl border border-cyan-500 shadow-xl relative">
+        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-cyan-500 text-black text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</div>
+        <div class="text-cyan-400 font-bold mt-2">Scale</div>
+        <div class="text-4xl font-black mt-2 text-white">$799<span class="text-sm text-slate-400">/mo</span></div>
+        <div class="text-slate-400 text-sm">up to 200 verified leads/mo</div>
+        <ul class="mt-6 space-y-2 text-sm text-slate-300 text-left">
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>Priority territory expansion</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>Advanced analytics dashboard</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>Dedicated account manager</li>
+        </ul>
+        <button onclick="openDemoModal()" class="mt-8 w-full btn-gradient rounded-xl py-2.5 font-bold">Start Scale Plan</button>
+      </div>
+      <div class="glass-card p-7 rounded-2xl text-center">
+        <div class="text-cyan-400 font-bold">Enterprise+</div>
+        <div class="text-4xl font-black mt-2 text-white">$1,999<span class="text-sm text-slate-400">/mo</span></div>
+        <div class="text-slate-400 text-sm">unlimited leads + custom SLAs</div>
+        <ul class="mt-6 space-y-2 text-sm text-slate-300 text-left">
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>Unlimited territories & users</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>White glove onboarding</li>
+          <li><i class="fa-regular fa-check-circle text-cyan-400 mr-2"></i>API access + SOC2 compliance</li>
+        </ul>
+        <button onclick="openDemoModal()" class="mt-8 w-full border border-cyan-500/40 rounded-xl py-2.5 font-semibold text-white hover:bg-cyan-500/10 transition">Talk to sales</button>
+      </div>
+    </div>
+    <p class="text-center text-slate-500 text-xs mt-8">*all plans include 30-day performance guarantee. No long-term lock-in.</p>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA SECTION (conversion killer) ================= -->
+<section class="py-20 px-6">
+  <div class="max-w-4xl mx-auto glass-card rounded-3xl p-10 text-center border border-cyan-500/30">
+    <i class="fa-regular fa-message-quote text-cyan-400 text-4xl mb-4"></i>
+    <h2 class="text-3xl md:text-4xl font-black">Ready to 10x your conversion pipeline?</h2>
+    <p class="text-slate-300 mt-2 max-w-lg mx-auto">Join the fastest-growing roofing enterprises that replaced lead marketplaces with verified intelligence.</p>
+    <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+      <button onclick="openDemoModal()" class="btn-gradient px-8 py-4 rounded-xl font-bold text-white text-lg shadow-2xl"><i class="fa-regular fa-calendar-check mr-2"></i> Book strategic demo</button>
+      <button onclick="openDemoModal()" class="glass-card px-8 py-4 rounded-xl font-medium border border-white/10">Talk to specialist</button>
+    </div>
+    <p class="text-xs text-slate-400 mt-6">✓ No credit card required ✓ 30-min customized walkthrough</p>
+  </div>
+</section>
+
+<!-- ================= MODAL (HIGH CONVERSION LEAD CAPTURE) ================= -->
+<div id="demoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100] opacity-0 invisible transition-all duration-300" onclick="if(event.target===this) closeDemoModal()">
+  <div class="bg-[#0B1120] border border-cyan-500/30 rounded-2xl max-w-md w-full mx-4 p-8 shadow-2xl transform transition-all">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-2xl font-black text-white">Get your 10/10 demo</h3>
+      <button onclick="closeDemoModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+    </div>
+    <p class="text-slate-300 text-sm mb-6">Fill the form — a pipeline expert will reach out within 2 hours.</p>
+    <form id="demoForm">
+      <div class="mb-4">
+        <input type="text" id="demoName" placeholder="Full name" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400">
+      </div>
+      <div class="mb-4">
+        <input type="email" id="demoEmail" placeholder="Business email" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400">
+      </div>
+      <div class="mb-4">
+        <input type="text" id="demoCompany" placeholder="Company name" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400">
+      </div>
+      <button type="submit" class="w-full btn-gradient py-3 rounded-xl font-bold text-white">Send demo request →</button>
+      <p class="text-[11px] text-center text-slate-500 mt-4">By submitting you agree to our terms & receive a strategy overview.</p>
+    </form>
+  </div>
+</div>
 
 <script>
-const data = [
-  {t:"Roof Replacement Opportunity", l:"Calgary, AB", v:"$21,000"},
-  {t:"Storm Damage Claim", l:"Edmonton, AB", v:"$14,500"},
-  {t:"Leak Inspection Request", l:"Red Deer, AB", v:"$3,200"}
-];
+  // ----- DYNAMIC LIVE LEAD FEED (conversion booster: simulate real verified demand) -----
+  const leadSamples = [
+    { title: "🔥 Emergency Roof Replacement", location: "Austin, TX", value: "$24,800", tag: "Verified" },
+    { title: "Storm Damage Claim", location: "Denver, CO", value: "$18,200", tag: "Insurance ready" },
+    { title: "Full Shingle Replacement", location: "Phoenix, AZ", value: "$15,450", tag: "Pre-approved" },
+    { title: "Leak Detection + Repair", location: "Portland, OR", value: "$5,300", tag: "High intent" },
+    { title: "Commercial Flat Roof", location: "Dallas, TX", value: "$42,000", tag: "Budget secured" },
+    { title: "New Construction TPO", location: "Charlotte, NC", value: "$67,500", tag: "Signed PO" },
+    { title: "Hail Damage Claim", location: "Oklahoma City, OK", value: "$31,200", tag: "Urgent" },
+    { title: "Metal Roof Upgrade", location: "Nashville, TN", value: "$27,900", tag: "Premium" }
+  ];
 
-document.getElementById("feed").innerHTML =
-  data.map(d => `
-    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-      <div class="font-semibold text-slate-200">${d.t}</div>
-      <div class="text-xs text-slate-500">${d.l}</div>
-      <div class="text-cyan-400 text-sm mt-2">${d.v}</div>
-    </div>
-  `).join("");
+  let displayedLeads = leadSamples.slice(0, 4);
+
+  function renderFeed() {
+    const container = document.getElementById('liveFeedContainer');
+    if (!container) return;
+    container.innerHTML = displayedLeads.map(lead => `
+      <div class="bg-black/50 border-l-4 border-cyan-500 rounded-xl p-3 hover:bg-black/60 transition live-item">
+        <div class="flex justify-between items-start">
+          <div class="font-semibold text-white text-sm">${lead.title}</div>
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full">${lead.tag}</span>
+        </div>
+        <div class="text-xs text-slate-400 mt-1 flex gap-3">
+          <span><i class="fa-regular fa-location-dot"></i> ${lead.location}</span>
+          <span><i class="fa-regular fa-tag"></i> Est. ${lead.value}</span>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-[10px] text-green-300"><i class="fa-regular fa-clock"></i> ${Math.floor(Math.random() * 12) + 1} min ago</span>
+          <span class="text-[10px] font-bold text-cyan-400">VERIFIED</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addNewLead() {
+    const randomLead = leadSamples[Math.floor(Math.random() * leadSamples.length)];
+    const newLead = { ...randomLead, tag: randomLead.tag + " 🔔" };
+    displayedLeads.unshift(newLead);
+    if (displayedLeads.length > 5) displayedLeads.pop();
+    renderFeed();
+  }
+
+  renderFeed();
+  setInterval(addNewLead, 8000);
+
+  // ----- MODAL LOGIC (conversion capture) -----
+  const modal = document.getElementById('demoModal');
+  function openDemoModal() {
+    modal.classList.remove('opacity-0', 'invisible');
+    modal.classList.add('opacity-100', 'visible');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDemoModal() {
+    modal.classList.add('opacity-0', 'invisible');
+    modal.classList.remove('opacity-100', 'visible');
+    document.body.style.overflow = '';
+  }
+  window.openDemoModal = openDemoModal;
+  window.closeDemoModal = closeDemoModal;
+
+  const demoForm = document.getElementById('demoForm');
+  if(demoForm) {
+    demoForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('demoName')?.value;
+      const email = document.getElementById('demoEmail')?.value;
+      const company = document.getElementById('demoCompany')?.value;
+      if(!name || !email || !company) {
+        alert("Please fill in all fields to book your 10/10 conversion demo.");
+        return;
+      }
+      alert(`✅ Thank you ${name} from ${company}! A NorthSky specialist will reach out within 2 hours to schedule your platform walkthrough.`);
+      closeDemoModal();
+      demoForm.reset();
+    });
+  }
+
+  // smooth anchor scrolling
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if(href === "#" || href === "") return;
+      const target = document.querySelector(href);
+      if(target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 </script>
-
+<style>
+  .custom-scroll::-webkit-scrollbar { width: 4px; }
+  .custom-scroll::-webkit-scrollbar-track { background: #0F172A; border-radius: 10px; }
+  .custom-scroll::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 10px; }
+</style>
 </body>
 </html>
