@@ -2,25 +2,54 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Safe whitelist (IMPORTANT for SaaS)
+const PLANS = {
+  starter: process.env.STRIPE_PRICE_STARTER,
+  growth: process.env.STRIPE_PRICE_GROWTH,
+  domination: process.env.STRIPE_PRICE_DOMINATION,
+};
+
 export default async function handler(req, res) {
-  const { plan, userId } = req.body;
+  try {
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Method not allowed" });
+    }
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price: process.env[`STRIPE_PRICE_${plan.toUpperCase()}`],
-        quantity: 1
-      }
-    ],
-    metadata: {
-      user_id: userId,
-      plan
-    },
-    success_url: `${process.env.DOMAIN}/dashboard?success=1`,
-    cancel_url: `${process.env.DOMAIN}/pricing`
-  });
+    const { plan, userId } = req.body;
 
-  res.json({ url: session.url });
+    // Validate input
+    if (!plan || !PLANS[plan]) {
+      return res.status(400).json({ error: "Invalid plan" });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card"],
+
+      line_items: [
+        {
+          price: PLANS[plan],
+          quantity: 1,
+        },
+      ],
+
+      metadata: {
+        user_id: userId || "guest",
+        plan,
+      },
+
+      success_url: `${process.env.DOMAIN}/dashboard?success=1`,
+      cancel_url: `${process.env.DOMAIN}/pricing`,
+    });
+
+    if (!session?.url) {
+      return res.status(500).json({ error: "Failed to create session" });
+    }
+
+    return res.status(200).json({ url: session.url });
+
+  } catch (err) {
+    console.error("Stripe checkout error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 }
