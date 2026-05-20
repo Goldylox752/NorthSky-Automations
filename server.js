@@ -1,19 +1,22 @@
 const express = require("express");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const Stripe = require("stripe");
 
 const app = express();
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-// In-memory store (swap with DB later)
+/* ===============================
+   SIMPLE STORE (replace with DB later)
+=============================== */
 const store = {
   subscriptions: {},
   events: [],
 };
 
-/**
- * Stripe webhook MUST use raw body
- */
+/* ===============================
+   STRIPE WEBHOOK (RAW BODY REQUIRED)
+=============================== */
 app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
@@ -29,24 +32,28 @@ app.post(
         endpointSecret
       );
     } catch (err) {
-      console.error("Webhook signature verification failed:", err.message);
-      return res.status(400).send("Invalid webhook signature");
+      console.error("Webhook signature failed:", err.message);
+      return res.status(400).send("Invalid signature");
     }
 
     try {
+      const data = event.data?.object;
+
       switch (event.type) {
         case "checkout.session.completed": {
-          const session = event.data.object;
+          const session = data;
+
+          const amount = session.amount_total || 0;
 
           const plan =
-            session.amount_total >= 99900
+            amount >= 99900
               ? "elite"
-              : session.amount_total >= 29900
+              : amount >= 29900
               ? "pro"
               : "starter";
 
           store.subscriptions[session.id] = {
-            email: session.customer_email,
+            email: session.customer_email || null,
             plan,
             active: true,
             createdAt: Date.now(),
@@ -55,9 +62,24 @@ app.post(
           break;
         }
 
+        case "customer.subscription.deleted": {
+          const sub = data;
+          if (store.subscriptions[sub.id]) {
+            store.subscriptions[sub.id].active = false;
+          }
+          break;
+        }
+
         default:
+          console.log("Unhandled event:", event.type);
           break;
       }
+
+      store.events.push({
+        id: event.id,
+        type: event.type,
+        createdAt: Date.now(),
+      });
 
       return res.json({ received: true });
     } catch (err) {
@@ -67,20 +89,22 @@ app.post(
   }
 );
 
-/**
- * IMPORTANT:
- * Stripe webhook route uses raw body, so JSON middleware must come AFTER
- */
+/* ===============================
+   JSON MIDDLEWARE (AFTER WEBHOOK)
+=============================== */
 app.use(express.json());
 
-/**
- * VERIFY SESSION
- */
+/* ===============================
+   VERIFY SESSION
+=============================== */
 app.post("/api/verify-session", (req, res) => {
   const { session_id } = req.body;
 
   if (!session_id) {
-    return res.status(400).json({ valid: false, error: "Missing session_id" });
+    return res.status(400).json({
+      valid: false,
+      error: "Missing session_id",
+    });
   }
 
   const sub = store.subscriptions[session_id];
@@ -95,9 +119,9 @@ app.post("/api/verify-session", (req, res) => {
   });
 });
 
-/**
- * EVENT LOGGER
- */
+/* ===============================
+   EVENT TRACKING ENDPOINT
+=============================== */
 app.post("/api/event", (req, res) => {
   const event = {
     ...req.body,
@@ -111,9 +135,9 @@ app.post("/api/event", (req, res) => {
   res.json({ ok: true });
 });
 
-/**
- * DEBUG ENDPOINTS
- */
+/* ===============================
+   DEBUG ROUTES
+=============================== */
 app.get("/api/debug/subscriptions", (req, res) => {
   res.json(store.subscriptions);
 });
@@ -122,11 +146,11 @@ app.get("/api/debug/events", (req, res) => {
   res.json(store.events);
 });
 
-/**
- * START SERVER
- */
+/* ===============================
+   START SERVER
+=============================== */
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`NorthSky backend running on :${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
