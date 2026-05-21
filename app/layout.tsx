@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "NorthSky | Pipeline Intelligence for Roofing Teams",
   description: "AI-powered roofing pipeline intelligence platform",
 };
