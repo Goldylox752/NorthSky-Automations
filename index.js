@@ -1,193 +1,366 @@
-// index.js – NorthSky landing page interactions
-(function() {
+// NorthSky UI + Interaction Engine
+(() => {
+
   "use strict";
 
-  // ------------------------------
-  // SCROLL REVEAL ANIMATIONS
-  // ------------------------------
+  // -----------------------------------
+  // CONFIG
+  // -----------------------------------
+  const CONFIG = {
+    demoUrl: "https://exchange-8gxt.onrender.com",
+    animationDuration: 1600,
+    revealThreshold: 0.12
+  };
+
+  // -----------------------------------
+  // HELPERS
+  // -----------------------------------
+  const $ = (selector, scope = document) =>
+    scope.querySelector(selector);
+
+  const $$ = (selector, scope = document) =>
+    [...scope.querySelectorAll(selector)];
+
+  // -----------------------------------
+  // SCROLL REVEALS
+  // -----------------------------------
   const revealObserver = new IntersectionObserver(
     (entries) => {
+
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in");
-          revealObserver.unobserve(entry.target);
-        }
+
+        if (!entry.isIntersecting) return;
+
+        entry.target.classList.add("in");
+
+        revealObserver.unobserve(entry.target);
+
       });
+
     },
-    { threshold: 0.1 }
-  );
-
-  document.querySelectorAll("[data-reveal]").forEach((el, idx) => {
-    // Staggered delay (optional)
-    el.style.transitionDelay = `${(idx % 4) * 60}ms`;
-    revealObserver.observe(el);
-  });
-
-  // ------------------------------
-  // STATISTICS NUMBER COUNTERS
-  // ------------------------------
-  const countObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const target = parseFloat(el.getAttribute("data-count"));
-          const suffix = el.getAttribute("data-suffix") || "";
-          const prefix = el.getAttribute("data-prefix") || "";
-          const display = el.getAttribute("data-display");
-
-          // Static value (no animation)
-          if (display) {
-            countObserver.unobserve(el);
-            return;
-          }
-
-          const duration = 1600;
-          const startTime = performance.now();
-
-          function animate(now) {
-            const p = Math.min((now - startTime) / duration, 1);
-            const ease = 1 - Math.pow(1 - p, 3);
-            const current = Math.round(ease * target);
-            el.textContent = prefix + current + suffix;
-            if (p < 1) requestAnimationFrame(animate);
-          }
-          requestAnimationFrame(animate);
-          countObserver.unobserve(el);
-        }
-      });
-    },
-    { threshold: 0.5 }
-  );
-
-  document.querySelectorAll("[data-count]").forEach((el) => {
-    countObserver.observe(el);
-  });
-
-  // ------------------------------
-  // HERO DASHBOARD COUNTERS
-  // ------------------------------
-  function runHeroCounter(id, target, suffix, duration = 1800, delay = 800) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    setTimeout(() => {
-      const start = performance.now();
-      function step(now) {
-        const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        const value = Math.round(ease * target);
-        el.textContent = value + suffix;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }, delay);
-  }
-
-  runHeroCounter("counter-close", 41, "%", 1800, 800);
-  runHeroCounter("counter-leads", 127, "", 1400, 800);
-
-  // ------------------------------
-  // FEATURE TABS (AI Lead Scoring, Storm Intelligence, CRM Auto-Sync)
-  // ------------------------------
-  function switchFeat(index) {
-    const features = document.querySelectorAll(".feat");
-    const panels = document.querySelectorAll(".preview-panel");
-    if (!features.length || !panels.length) return;
-
-    features.forEach((feat) => feat.classList.remove("active"));
-    panels.forEach((panel) => panel.classList.remove("active"));
-
-    const targetFeat = document.querySelector(`.feat[data-feat="${index}"]`);
-    const targetPanel = document.getElementById(`feat-${index}`);
-    if (targetFeat) targetFeat.classList.add("active");
-    if (targetPanel) targetPanel.classList.add("active");
-  }
-
-  // Attach click handlers to feature items
-  document.querySelectorAll(".feat").forEach((feat) => {
-    const idx = feat.getAttribute("data-feat");
-    if (idx !== null && !feat.hasAttribute("data-listener")) {
-      feat.setAttribute("data-listener", "true");
-      feat.addEventListener("click", () => switchFeat(parseInt(idx)));
+    {
+      threshold: CONFIG.revealThreshold
     }
+  );
+
+  $$("[data-reveal]").forEach((el, idx) => {
+
+    el.style.transitionDelay =
+      `${(idx % 5) * 70}ms`;
+
+    revealObserver.observe(el);
+
   });
 
-  // ------------------------------
-  // FAQ TOGGLE (Accordion)
-  // ------------------------------
-  function toggleFaq(btn) {
-    const item = btn.closest(".faq-item");
-    if (!item) return;
-    const isOpen = item.classList.contains("open");
+  // -----------------------------------
+  // COUNT-UP STATISTICS
+  // -----------------------------------
+  const animateValue = ({
+    el,
+    target = 0,
+    prefix = "",
+    suffix = "",
+    duration = CONFIG.animationDuration
+  }) => {
 
-    // Close all other FAQ items
-    document.querySelectorAll(".faq-item.open").forEach((faq) => {
+    const start = performance.now();
+
+    const update = (now) => {
+
+      const progress =
+        Math.min((now - start) / duration, 1);
+
+      const eased =
+        1 - Math.pow(1 - progress, 3);
+
+      const current =
+        Math.round(eased * target);
+
+      el.textContent =
+        `${prefix}${current}${suffix}`;
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+
+    };
+
+    requestAnimationFrame(update);
+
+  };
+
+  const counterObserver = new IntersectionObserver(
+    (entries) => {
+
+      entries.forEach((entry) => {
+
+        if (!entry.isIntersecting) return;
+
+        const el = entry.target;
+
+        const target =
+          parseFloat(el.dataset.count || 0);
+
+        const prefix =
+          el.dataset.prefix || "";
+
+        const suffix =
+          el.dataset.suffix || "";
+
+        const display =
+          el.dataset.display;
+
+        // Static display value
+        if (display) {
+
+          el.textContent = display;
+
+          counterObserver.unobserve(el);
+
+          return;
+
+        }
+
+        animateValue({
+          el,
+          target,
+          prefix,
+          suffix
+        });
+
+        counterObserver.unobserve(el);
+
+      });
+
+    },
+    {
+      threshold: 0.45
+    }
+  );
+
+  $$("[data-count]").forEach((el) => {
+    counterObserver.observe(el);
+  });
+
+  // -----------------------------------
+  // HERO METRIC ANIMATION
+  // -----------------------------------
+  const heroMetrics = [
+    {
+      id: "counter-close",
+      target: 41,
+      suffix: "%"
+    },
+    {
+      id: "counter-leads",
+      target: 127,
+      suffix: ""
+    }
+  ];
+
+  heroMetrics.forEach((metric, index) => {
+
+    const el = document.getElementById(metric.id);
+
+    if (!el) return;
+
+    setTimeout(() => {
+
+      animateValue({
+        el,
+        target: metric.target,
+        suffix: metric.suffix,
+        duration: 1800
+      });
+
+    }, 700 + (index * 180));
+
+  });
+
+  // -----------------------------------
+  // FEATURE PANEL SWITCHING
+  // -----------------------------------
+  const featureItems = $$(".feat");
+
+  const previewPanels =
+    $$(".preview-panel");
+
+  const switchFeature = (index) => {
+
+    featureItems.forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    previewPanels.forEach((panel) => {
+      panel.classList.remove("active");
+    });
+
+    const activeItem =
+      $(`.feat[data-feat="${index}"]`);
+
+    const activePanel =
+      document.getElementById(`feat-${index}`);
+
+    activeItem?.classList.add("active");
+
+    activePanel?.classList.add("active");
+
+  };
+
+  featureItems.forEach((item) => {
+
+    if (item.dataset.bound) return;
+
+    item.dataset.bound = "true";
+
+    item.addEventListener("click", () => {
+
+      switchFeature(item.dataset.feat);
+
+    });
+
+  });
+
+  // -----------------------------------
+  // FAQ ACCORDION
+  // -----------------------------------
+  const faqItems =
+    $$(".faq-item");
+
+  const toggleFaq = (item) => {
+
+    const isOpen =
+      item.classList.contains("open");
+
+    faqItems.forEach((faq) => {
       faq.classList.remove("open");
     });
 
-    // Open the clicked one if it was closed
-    if (!isOpen) item.classList.add("open");
-  }
-
-  // Attach listeners to all FAQ buttons
-  document.querySelectorAll(".faq-btn").forEach((btn) => {
-    if (!btn.hasAttribute("data-faq-listener")) {
-      btn.setAttribute("data-faq-listener", "true");
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggleFaq(btn);
-      });
+    if (!isOpen) {
+      item.classList.add("open");
     }
-  });
 
-  // Ensure at least one FAQ is open (first one by default)
-  if (!document.querySelector(".faq-item.open")) {
-    const firstFaq = document.querySelector(".faq-item");
-    if (firstFaq) firstFaq.classList.add("open");
-  }
+  };
 
-  // ------------------------------
-  // SMOOTH SCROLL FOR INTERNAL LINKS
-  // ------------------------------
-  // Handle "See how it works" button
-  const seeHowBtn = document.querySelector(".btn-outline");
-  if (seeHowBtn) {
-    seeHowBtn.addEventListener("click", (e) => {
+  faqItems.forEach((item) => {
+
+    const btn =
+      $(".faq-btn", item);
+
+    if (!btn || btn.dataset.bound) return;
+
+    btn.dataset.bound = "true";
+
+    btn.addEventListener("click", (e) => {
+
       e.preventDefault();
-      const featuresSection = document.getElementById("features");
-      if (featuresSection) featuresSection.scrollIntoView({ behavior: "smooth" });
-    });
-  }
 
-  // Handle all anchor links with hash (#)
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", function(e) {
-      const targetId = this.getAttribute("href").slice(1);
-      if (targetId && document.getElementById(targetId)) {
-        e.preventDefault();
-        document.getElementById(targetId).scrollIntoView({ behavior: "smooth" });
-      }
+      toggleFaq(item);
+
     });
+
   });
 
-  // ------------------------------
-  // DEMO BUTTON HANDLER (Redirect to your backend booking page)
-  // ------------------------------
-  const DEMO_URL = "https://exchange-8gxt.onrender.com";
-
-  function openDemo() {
-    window.open(DEMO_URL, "_blank");
+  // Open first FAQ by default
+  if (
+    faqItems.length &&
+    !$(".faq-item.open")
+  ) {
+    faqItems[0].classList.add("open");
   }
 
-  // Attach to all demo trigger buttons (primary, white, nav-cta)
-  const demoButtons = document.querySelectorAll(".btn-primary, .btn-white, .nav-cta");
-  demoButtons.forEach((btn) => {
-    if (!btn.hasAttribute("data-demo-listener")) {
-      btn.setAttribute("data-demo-listener", "true");
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        openDemo();
+  // -----------------------------------
+  // SMOOTH SCROLL
+  // -----------------------------------
+  $$('a[href^="#"]').forEach((link) => {
+
+    link.addEventListener("click", (e) => {
+
+      const id =
+        link.getAttribute("href").slice(1);
+
+      const target =
+        document.getElementById(id);
+
+      if (!target) return;
+
+      e.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
       });
-    }
+
+    });
+
   });
+
+  // -----------------------------------
+  // DEMO / CTA BUTTONS
+  // -----------------------------------
+  const openDemo = () => {
+
+    window.open(
+      CONFIG.demoUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  };
+
+  const ctaButtons = $$(
+    ".btn-primary, .btn-white, .nav-cta"
+  );
+
+  ctaButtons.forEach((btn) => {
+
+    if (btn.dataset.bound) return;
+
+    btn.dataset.bound = "true";
+
+    btn.addEventListener("click", (e) => {
+
+      e.preventDefault();
+
+      openDemo();
+
+    });
+
+  });
+
+  // -----------------------------------
+  // NAVBAR SHADOW ON SCROLL
+  // -----------------------------------
+  const navbar =
+    $("header");
+
+  const updateNavbar = () => {
+
+    if (!navbar) return;
+
+    if (window.scrollY > 20) {
+
+      navbar.classList.add(
+        "border-white\\/10",
+        "bg-black\\/80",
+        "backdrop-blur-xl"
+      );
+
+    } else {
+
+      navbar.classList.remove(
+        "bg-black\\/80"
+      );
+
+    }
+
+  };
+
+  window.addEventListener(
+    "scroll",
+    updateNavbar
+  );
+
+  updateNavbar();
+
 })();
