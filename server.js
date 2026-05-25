@@ -1,22 +1,28 @@
-const express = require("express");
-const Stripe = require("stripe");
+import express from "express";
+import Stripe from "stripe";
 
 const app = express();
+
+/* ─────────────────────────────
+   STRIPE SETUP
+───────────────────────────── */
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-/* ===============================
-   SIMPLE STORE (replace with DB later)
-=============================== */
+/* ─────────────────────────────
+   SIMPLE IN-MEMORY STORE (swap with DB later)
+───────────────────────────── */
+
 const store = {
-  subscriptions: {},
-  events: [],
+  subscriptions: new Map(),
+  events: []
 };
 
-/* ===============================
+/* ─────────────────────────────
    STRIPE WEBHOOK (RAW BODY REQUIRED)
-=============================== */
+───────────────────────────── */
+
 app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
@@ -32,18 +38,21 @@ app.post(
         endpointSecret
       );
     } catch (err) {
-      console.error("Webhook signature failed:", err.message);
+      console.error("❌ Stripe signature failed:", err.message);
       return res.status(400).send("Invalid signature");
     }
 
     try {
-      const data = event.data?.object;
+      const data = event?.data?.object;
 
       switch (event.type) {
+        /* ===============================
+           CHECKOUT COMPLETED
+        =============================== */
         case "checkout.session.completed": {
           const session = data;
 
-          const amount = session.amount_total || 0;
+          const amount = Number(session.amount_total || 0);
 
           const plan =
             amount >= 99900
@@ -52,62 +61,71 @@ app.post(
               ? "pro"
               : "starter";
 
-          store.subscriptions[session.id] = {
+          store.subscriptions.set(session.id, {
             email: session.customer_email || null,
             plan,
             active: true,
-            createdAt: Date.now(),
-          };
+            createdAt: Date.now()
+          });
 
           break;
         }
 
+        /* ===============================
+           SUBSCRIPTION CANCELLED
+        =============================== */
         case "customer.subscription.deleted": {
           const sub = data;
-          if (store.subscriptions[sub.id]) {
-            store.subscriptions[sub.id].active = false;
+
+          const existing = store.subscriptions.get(sub.id);
+
+          if (existing) {
+            existing.active = false;
+            store.subscriptions.set(sub.id, existing);
           }
+
           break;
         }
 
         default:
-          console.log("Unhandled event:", event.type);
-          break;
+          console.log("Unhandled Stripe event:", event.type);
       }
 
       store.events.push({
         id: event.id,
         type: event.type,
-        createdAt: Date.now(),
+        createdAt: Date.now()
       });
 
       return res.json({ received: true });
     } catch (err) {
-      console.error("Webhook handling error:", err);
-      return res.status(500).json({ error: "Webhook handler failed" });
+      console.error("❌ Webhook handler error:", err);
+      return res.status(500).json({ error: "Webhook processing failed" });
     }
   }
 );
 
-/* ===============================
+/* ─────────────────────────────
    JSON MIDDLEWARE (AFTER WEBHOOK)
-=============================== */
+───────────────────────────── */
+
 app.use(express.json());
 
-/* ===============================
+/* ─────────────────────────────
    VERIFY SESSION
-=============================== */
+───────────────────────────── */
+
 app.post("/api/verify-session", (req, res) => {
   const { session_id } = req.body;
 
   if (!session_id) {
     return res.status(400).json({
       valid: false,
-      error: "Missing session_id",
+      error: "Missing session_id"
     });
   }
 
-  const sub = store.subscriptions[session_id];
+  const sub = store.subscriptions.get(session_id);
 
   if (!sub || !sub.active) {
     return res.json({ valid: false });
@@ -115,42 +133,45 @@ app.post("/api/verify-session", (req, res) => {
 
   return res.json({
     valid: true,
-    plan: sub.plan,
+    plan: sub.plan
   });
 });
 
-/* ===============================
-   EVENT TRACKING ENDPOINT
-=============================== */
+/* ─────────────────────────────
+   EVENT TRACKING
+───────────────────────────── */
+
 app.post("/api/event", (req, res) => {
   const event = {
     ...req.body,
-    time: Date.now(),
+    time: Date.now()
   };
 
   store.events.push(event);
 
-  console.log("EVENT:", event);
+  console.log("📊 EVENT:", event);
 
   res.json({ ok: true });
 });
 
-/* ===============================
+/* ─────────────────────────────
    DEBUG ROUTES
-=============================== */
+───────────────────────────── */
+
 app.get("/api/debug/subscriptions", (req, res) => {
-  res.json(store.subscriptions);
+  res.json(Object.fromEntries(store.subscriptions));
 });
 
 app.get("/api/debug/events", (req, res) => {
   res.json(store.events);
 });
 
-/* ===============================
+/* ─────────────────────────────
    START SERVER
-=============================== */
+───────────────────────────── */
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
