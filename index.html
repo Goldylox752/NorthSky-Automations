@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Northsky · Software & AI Systems</title>
+<title>Northsky · AI Software Infrastructure</title>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg1:#050816;
-  --bg2:#0b1a3a;
-  --accent:#4f8cff;
+  --bg:#050816;
+  --panel:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
   --text:#ffffff;
   --muted:rgba(255,255,255,0.7);
-  --border:rgba(255,255,255,0.08);
+  --accent:#4f8cff;
+  --green:#38f2a5;
 }
 
 *{
@@ -25,7 +26,7 @@
 }
 
 body{
-  background:radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
+  background:radial-gradient(circle at 20% 20%, #0b1a3a, var(--bg));
   color:var(--text);
 }
 
@@ -43,9 +44,7 @@ nav{
   letter-spacing:0.5px;
 }
 
-.logo span{
-  color:var(--accent);
-}
+.logo span{ color:var(--accent); }
 
 .btn{
   background:var(--accent);
@@ -66,41 +65,57 @@ nav{
 /* HERO */
 .hero{
   text-align:center;
-  padding:120px 20px 70px;
+  padding:120px 20px 60px;
 }
 
 .hero h1{
-  font-size:58px;
-  line-height:1.1;
-  margin-bottom:16px;
-}
-
-.hero h1 span{
-  color:var(--accent);
+  font-size:60px;
+  line-height:1.05;
+  margin-bottom:18px;
 }
 
 .hero p{
-  max-width:800px;
-  margin:0 auto;
+  max-width:820px;
+  margin:auto;
   color:var(--muted);
   font-size:18px;
   line-height:1.7;
 }
 
-/* CTA */
-.cta{
-  margin-top:28px;
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
+/* METRICS */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  max-width:1000px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.metric{
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.metric h3{
+  font-size:22px;
+  color:var(--green);
+}
+
+.metric p{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
 }
 
 /* SECTION */
 .section{
   max-width:1100px;
   margin:auto;
-  padding:60px 24px;
+  padding:70px 20px;
 }
 
 .section h2{
@@ -117,7 +132,7 @@ nav{
 }
 
 .card{
-  background:rgba(255,255,255,0.04);
+  background:var(--panel);
   border:1px solid var(--border);
   padding:20px;
   border-radius:16px;
@@ -125,7 +140,7 @@ nav{
 }
 
 .card:hover{
-  transform:translateY(-4px);
+  transform:translateY(-5px);
   border-color:rgba(79,140,255,0.5);
 }
 
@@ -135,8 +150,35 @@ nav{
 
 .card p{
   color:var(--muted);
-  line-height:1.6;
   font-size:14px;
+  line-height:1.6;
+}
+
+/* STORY */
+.story{
+  max-width:800px;
+  margin:auto;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+/* CTA */
+.cta{
+  text-align:center;
+  padding:70px 20px;
+}
+
+.cta h2{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+.cta p{
+  color:var(--muted);
+  max-width:700px;
+  margin:auto;
+  line-height:1.6;
 }
 
 /* FOOTER */
@@ -162,74 +204,97 @@ footer{
 
 <!-- HERO -->
 <section class="hero">
-
-  <h1>Northsky Builds AI Software Systems</h1>
+  <h1>AI Infrastructure for Modern Revenue Systems</h1>
 
   <p>
-    Northsky is a software company building AI automation systems, SaaS platforms,
-    and revenue infrastructure for modern businesses. We design full-stack products
-    that combine AI agents, CRM systems, and payment automation into one ecosystem.
+    Northsky builds AI software infrastructure that powers sales automation,
+    lead generation, CRM systems, and subscription billing for service businesses and SaaS companies.
   </p>
+</section>
 
-  <div class="cta">
-    <a href="/app.html">
-      <button class="btn">Enter Platform</button>
-    </a>
+<!-- METRICS -->
+<section class="metrics">
 
-    <a href="#products">
-      <button class="btn" style="background:rgba(255,255,255,0.08);">
-        View Products
-      </button>
-    </a>
+  <div class="metric">
+    <h3>AI Systems</h3>
+    <p>Automation engines deployed across multiple verticals</p>
+  </div>
+
+  <div class="metric">
+    <h3>24/7</h3>
+    <p>AI agents operating without human intervention</p>
+  </div>
+
+  <div class="metric">
+    <h3>Full Stack</h3>
+    <p>Frontend, backend, AI, CRM, billing systems</p>
+  </div>
+
+  <div class="metric">
+    <h3>Revenue Focus</h3>
+    <p>Built to convert traffic into paying customers</p>
   </div>
 
 </section>
 
 <!-- PRODUCTS -->
-<section class="section" id="products">
+<section class="section">
 
-<h2>Core Systems Built by Northsky</h2>
+<h2>Core Systems</h2>
 
 <div class="grid">
 
   <div class="card">
     <h3>CleanFlow AI</h3>
-    <p>AI receptionist system that captures, qualifies, and books leads automatically.</p>
+    <p>AI receptionist that captures, qualifies, and books leads automatically.</p>
   </div>
 
   <div class="card">
     <h3>RoofFlow AI</h3>
-    <p>AI sales automation system for roofing companies that turns traffic into booked estimates.</p>
+    <p>AI sales system for service businesses converting traffic into booked estimates.</p>
   </div>
 
   <div class="card">
     <h3>AI Operator Dashboard</h3>
-    <p>Control center for managing AI agents, workflows, and automation systems.</p>
+    <p>Central control panel for managing AI agents and automation workflows.</p>
   </div>
 
   <div class="card">
-    <h3>Revenue Automation Engine</h3>
-    <p>Backend system connecting AI chat, Stripe billing, and CRM pipelines.</p>
+    <h3>Revenue Engine</h3>
+    <p>Stripe + CRM + AI orchestration system for subscription-based SaaS products.</p>
   </div>
 
 </div>
 </section>
 
-<!-- ABOUT -->
+<!-- STORY -->
 <section class="section">
 
-<h2>What Northsky Does</h2>
+<h2>Why Northsky Exists</h2>
 
-<p style="text-align:center;max-width:800px;margin:auto;color:var(--muted);line-height:1.7;">
-We build software that replaces manual business operations with AI systems.
-From lead generation to sales automation and subscription billing, Northsky creates
-end-to-end digital infrastructure for modern companies.
+<p class="story">
+Most businesses lose customers due to slow response times, manual processes, and disconnected systems.
+Northsky replaces fragmented tools with unified AI infrastructure that automates sales, communication, and revenue operations end-to-end.
 </p>
 
 </section>
 
+<!-- CTA -->
+<section class="cta">
+
+<h2>Build with Northsky</h2>
+<p>Deploy AI systems that operate your business 24/7 and turn every interaction into revenue.</p>
+
+<br><br>
+
+<a href="/app.html">
+  <button class="btn">Launch Platform</button>
+</a>
+
+</section>
+
 <footer>
-  © 2026 Northsky Software · AI Systems & Automation Infrastructure
+  © 2026 Northsky · AI Infrastructure Company
 </footer>
 
 </body>
